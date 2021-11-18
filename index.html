@@ -523,7 +523,7 @@
         
 
         <li class="nav-item">
-          <a class="nav-link " href="/#posts" data-target="#posts"><span>Posts</span></a>
+          <a class="nav-link " href="/#skills" data-target="#skills"><span>Skills</span></a>
         </li>
 
         
@@ -560,7 +560,7 @@
         
 
         <li class="nav-item">
-          <a class="nav-link " href="/#projects" data-target="#projects"><span>Projects</span></a>
+          <a class="nav-link " href="/#experience" data-target="#experience"><span>Experience</span></a>
         </li>
 
         
@@ -597,7 +597,7 @@
         
 
         <li class="nav-item">
-          <a class="nav-link " href="/#talks" data-target="#talks"><span>Talks</span></a>
+          <a class="nav-link " href="/#projectMap" data-target="#projectMap"><span>Project Map</span></a>
         </li>
 
         
@@ -634,7 +634,44 @@
         
 
         <li class="nav-item">
-          <a class="nav-link " href="/#featured" data-target="#featured"><span>Publications</span></a>
+          <a class="nav-link " href="/#projects" data-target="#projects"><span>Featured Projects</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+            
+            
+            
+              
+            
+            
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#publications" data-target="#publications"><span>Publications</span></a>
         </li>
 
         
@@ -1410,20 +1447,25 @@
 
 
   <div class="col-12">
-    <script>
-
+    <script async  //Load google maps API
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIyn101uVlf-ik6NE6ygnkgLhGicwqwyg&callback=initMap">
 </script>
 <script>
-var map;
-// First index is for the marker handle
-var projects = [
-  [, "The Diegan", 32.71620, -117.16515, "30912-01-Courthouse-2.jpg"],
-  [, "Quince", 32.73845, -117.16444, "30912-01-Courthouse-1.jpg"],
-];
+// Setup the project database file
+const projectDatabaseFile = "projects.csv";
+const ProjectDatabaseNumberMap = [2, 3, 4, 7, 8];
 
-const infoWin = new google.maps.InfoWindow({
-  content: contentString,
-});
+// Map icons
+const iconRes = "https://mt.google.com/vt/icon/name=icons/onion/SHARED-mymaps-container-bg_4x.png,icons/onion/SHARED-mymaps-container_4x.png,icons/onion/1603-house_4x.png&highlight=ff000000,0288D1,ff000000&scale=1.0";
+const iconCom = "https://mt.google.com/vt/icon/name=icons/onion/SHARED-mymaps-container-bg_4x.png,icons/onion/SHARED-mymaps-container_4x.png,icons/onion/1685-shopping-cart_4x.png&highlight=ff000000,0F9D58,ff000000&scale=1.0";
+const iconOff = "https://mt.google.com/vt/icon/name=icons/onion/SHARED-mymaps-container-bg_4x.png,icons/onion/SHARED-mymaps-container_4x.png,icons/onion/1531-business-briefcase_4x.png&highlight=ff000000,F9A825,ff000000&scale=1.0";
+const iconHosp = "https://mt.google.com/vt/icon/name=icons/onion/SHARED-mymaps-container-bg_4x.png,icons/onion/SHARED-mymaps-container_4x.png,icons/onion/1602-hotel-bed_4x.png&highlight=ff000000,FF5252,ff000000&scale=1.0";
+const iconInst = "https://mt.google.com/vt/icon/name=icons/onion/SHARED-mymaps-container-bg_4x.png,icons/onion/SHARED-mymaps-container_4x.png,icons/onion/1546-city-buildings_4x.png&highlight=ff000000,9C27B0,ff000000&scale=1.0";
+const iconSpec = "";
+
+// Setup global variables
+var map;
+var projects;
 
 
 function initMap() {
@@ -1438,41 +1480,138 @@ function initMap() {
       gestureHandling: "greedy",
   });
   
-  setMarkers(map);
+  readProjects("uploads/projects/" + projectDatabaseFile).then( () => {setMarkers(map)});
 }
 
 
+function readProjects(file) {
+  return fetch(file)
+    .then(checkStatus)
+    .then(extractText)
+    .then(extractData)
+    .catch(function(error) {
+      console.log(error);
+    });
+};
+
+
+function checkStatus(response) {
+  if (response.ok)
+    return Promise.resolve(response);
+  else
+    return Promise.rejct(new Error(response.statusText));
+};
+
+function extractText(response) {
+  return response.text();
+};
+
+function extractData(text) {
+    let rows = text.split("\r\n");
+    
+    projects = [];
+    var splitRow;
+    var tempVal;
+    for (let i = 1; i < rows.length - 1; i++) {
+        splitRow = rows[i].split(",");
+        
+        // Initialize array size
+        projects[i - 1] = Array(splitRow.length + 1);
+        
+        // Set the values
+        for (let j = 0; j < splitRow.length; j++) {
+          if (ProjectDatabaseNumberMap.includes(j))
+            projects[i - 1][j + 1] = +splitRow[j];
+          else
+            projects[i - 1][j + 1] = splitRow[j];
+        }
+    }
+    
+    return Promise.resolve(projects);
+};
+
+
+
+
 function setMarkers(map) {
+  
+  
+  
+  var iconType;
   for (let i = 0; i < projects.length; i++) {
+    switch (projects[i][2]) {
+      case "Residential":
+        iconType = iconRes;
+        break;
+      case "Hospitality":
+        iconType = iconHosp;
+        break;
+      case "Office":
+        iconType = iconOff;
+        break;
+      case "Commercial":
+        iconType = iconCom;
+        break;
+      case "Institutional":
+        iconType = iconInst;
+        break;
+      default:
+        iconType = "";
+    }
+    
     projects[i][0] = new google.maps.Marker({
-      position: { lat: projects[i][2], lng: projects[i][3] },
+      position: { lat: projects[i][8], lng: projects[i][9] },
       map,
       title: projects[i][1],
-      label: projects[i][1],
-      icon: { labelOrigin: new google.maps.Point(5, 0) },
+      icon: iconType,
     });
     
-    projects[i][0].addListener("click", () => {setProjectInfo(projects[i]);});
+    projects[i][0].addListener("click", () => {setProjectInfo(projects[i])});
   }
 }
 
 function setProjectInfo(project) {
+  map.setCenter({ lat: project[8], lng: project[9] });
+  
+  let z = map.getZoom();
+  if (z < 10)
+    map.setZoom(14 - z/2);
+  
   document.getElementById("projectName").innerHTML = project[1];
-  document.getElementById("projectImg").src = "uploads/projects/" + project[4];
+  document.getElementById("projectDate").innerHTML = project[3];
+  
+  // hide the image if no image, if there is, wait until it's fully loaded before showing it
+  var img = document.getElementById("projectImg");
+  if (project[10] == "")
+    img.style.visibility = "hidden";
+  else {
+    img.src = "uploads/projects/" + project[10];
+    if (img.complete)
+      img.style.visibility = "visible";
+    else
+      img.addEventListener('load', () => {img.style.visibility = "visible"});
+  }
 }
 
+
+// see https://stackoverflow.com/questions/19206919/how-to-create-checkbox-inside-dropdown
+// for dropdown checklist
+
 </script>
-<div style="display: grid; grid-template-columns: 60% 40%; grid-column-gap: 20px;">
-  <div id="map">okay</div>
+<div style="display: grid; grid-template-columns: 100%; grid-column-gap: 20px;">
+  <div id="projectFilter" style="grid-column: 1 / span 1; text-align:center;">
+    <span>
+      Filters: 
+      <input type="checkbox" id="typeRes"> <label for="typeRes">Residential</label>
+    </span>
+  </div>
+  <div id="map" style="height:500px"></div>
   <div id="info">
+    <img id="projectImg" src="uploads/projects/30912-01-Courthouse-1.jpg" style="max-height:350px; margin-left:auto; margin-right:auto;">
     <h2 id="projectName">Project Name</h2>
     <p id="projectDate">Date</p>
-    <img id="projectImg" src="uploads/projects/30912-01-Courthouse-2.jpg">
   </div>
 </div>
-<script async
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIyn101uVlf-ik6NE6ygnkgLhGicwqwyg&callback=initMap">
-</script>
 
   </div>
 
