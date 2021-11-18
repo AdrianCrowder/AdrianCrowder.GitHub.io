@@ -875,7 +875,9 @@
     <h1>About Me</h1>
 
     <div class="article-style">
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique placerat feugiat ac, facilisis vitae arcu. Proin eget egestas augue. Praesent ut sem nec arcu pellentesque aliquet. Duis dapibus diam vel metus tempus vulputate.</p>
+      <p>Welcome to my portfolio. Here you’ll find bits of what I do as a structural engineer and what interests me within the field.</p>
+<p>At the heart of who I am is truly a learner. I like to thoroughly understand everything I do and seek ways to improve my designs with that understanding. What often follows are design tools I create to make life easier and more efficient for me and my colleagues.</p>
+<p>At a young age, my curiosity led me to learn about programming. That hobby has stayed with me for nearly two decades where I now use that skill to benefit my company. As a practicing structural engineer, I appreciate the frustrations with the software we use every day. Because of that, I make my own tools to be flexible enough to handle the unique and novel scenarios we encounter.</p>
 
     </div>
 
@@ -1262,8 +1264,10 @@
           
 
           <div class="card-text"><ul>
-<li>Contract to develop and design machine for experimental tests</li>
-<li></li>
+<li>Contract to develop and design machine for testing a variety of structural elements</li>
+<li>Setup required to simulate cyclic earthquakes while applying axial load</li>
+<li>Design &amp; drafting of all structural aspects including interface with hydraulic system</li>
+<li>Produced construction documents, calculations, and 3D renderings</li>
 </ul>
 </div>
         </div>
@@ -1406,9 +1410,70 @@
 
 
   <div class="col-12">
-    <div style="width:100%; overflow: hidden; height:500;">
-	<iframe width="100%" height="554" frameborder="0" style="border:0; margin-top: -54px;" src="https://www.google.com/maps/d/embed?mid=1lJUan9YNVVQomdU3uU7QhTiZXIcF9SBs"></iframe>
+    <script>
+
+</script>
+<script>
+var map;
+// First index is for the marker handle
+var projects = [
+  [, "The Diegan", 32.71620, -117.16515, "30912-01-Courthouse-2.jpg"],
+  [, "Quince", 32.73845, -117.16444, "30912-01-Courthouse-1.jpg"],
+];
+
+const infoWin = new google.maps.InfoWindow({
+  content: contentString,
+});
+
+
+function initMap() {
+  const initLatLng = { lat: 41.91198, lng: -110.43058}
+  map = new google.maps.Map(document.getElementById('map'), {
+      center: initLatLng,
+      zoom: 4,
+      mapId: "9beed1c0df4b395f",
+      mapTypeControl: false,
+      scaleControl: false,
+      streetViewControl: false,
+      gestureHandling: "greedy",
+  });
+  
+  setMarkers(map);
+}
+
+
+function setMarkers(map) {
+  for (let i = 0; i < projects.length; i++) {
+    projects[i][0] = new google.maps.Marker({
+      position: { lat: projects[i][2], lng: projects[i][3] },
+      map,
+      title: projects[i][1],
+      label: projects[i][1],
+      icon: { labelOrigin: new google.maps.Point(5, 0) },
+    });
+    
+    projects[i][0].addListener("click", () => {setProjectInfo(projects[i]);});
+  }
+}
+
+function setProjectInfo(project) {
+  document.getElementById("projectName").innerHTML = project[1];
+  document.getElementById("projectImg").src = "uploads/projects/" + project[4];
+}
+
+</script>
+<div style="display: grid; grid-template-columns: 60% 40%; grid-column-gap: 20px;">
+  <div id="map">okay</div>
+  <div id="info">
+    <h2 id="projectName">Project Name</h2>
+    <p id="projectDate">Date</p>
+    <img id="projectImg" src="uploads/projects/30912-01-Courthouse-2.jpg">
+  </div>
 </div>
+<script async
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIyn101uVlf-ik6NE6ygnkgLhGicwqwyg&callback=initMap">
+</script>
+
   </div>
 
 
@@ -1648,7 +1713,7 @@
       
       
       <a href="/project/thesis-topic/" >
-        <img src="/project/thesis-topic/featured_hu3d03a01dcc18bc5be0e67db3d8d209a6_224363_540x0_resize_q75_lanczos.jpg" alt="Thesis Topic: Low Cost Seismic Isolation" loading="lazy">
+        <img src="/project/thesis-topic/featured_hu0c706eb38023c72dcb95dd861ff6eb43_2062211_540x0_resize_q75_lanczos.jpg" alt="Thesis Topic: Low Cost Seismic Isolation" loading="lazy">
       </a>
       
     </div>
@@ -1871,6 +1936,297 @@
 <a class="btn btn-outline-primary btn-page-header btn-sm" href="https://doi.org/10.1061/%28ASCE%29ST.1943-541X.0001784" target="_blank" rel="noopener">
   DOI
 </a>
+
+
+
+    </div>
+    
+
+  </div>
+  <div class="ml-3">
+    
+    
+  </div>
+</div>
+
+    
+  
+    
+      
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+  
+
+
+<div class="media stream-item">
+  <div class="media-body">
+
+    <div class="section-subheading article-title mb-0 mt-0">
+      <a href="/publication/16wcee/" >Increased Substructure Flexibility on Column-Top Isolation Systems</a>
+    </div>
+
+    
+    <a href="/publication/16wcee/"  class="summary-link">
+      <div class="article-style">
+        As seismic isolation continues to gain popularity for its ability to significantly reduce earthquake damage, retrofit applications are …
+      </div>
+    </a>
+    
+
+    <div class="stream-meta article-metadata">
+
+      
+
+      
+      <div>
+        
+
+  <span class="author-highlighted">
+      Adrian Crowder</span>, <span >
+      Tracy Becker</span>
+      </div>
+      
+    </div>
+
+    
+    <div class="btn-links">
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+<a class="btn btn-outline-primary btn-page-header btn-sm" href="/publication/16wcee/16WCEE.pdf" target="_blank" rel="noopener">
+  PDF
+</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+    
+
+  </div>
+  <div class="ml-3">
+    
+    
+  </div>
+</div>
+
+    
+  
+    
+      
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+  
+
+
+<div class="media stream-item">
+  <div class="media-body">
+
+    <div class="section-subheading article-title mb-0 mt-0">
+      <a href="/publication/16csce/" >Effects of Non-Traditional Isolation Placement for Seismic Retrofit</a>
+    </div>
+
+    
+    <a href="/publication/16csce/"  class="summary-link">
+      <div class="article-style">
+        Seismic isolation delivers improved performance by means of a flexible layer at which lateral deformation is concentrated. However, for …
+      </div>
+    </a>
+    
+
+    <div class="stream-meta article-metadata">
+
+      
+
+      
+      <div>
+        
+
+  <span class="author-highlighted">
+      Adrian Crowder</span>, <span >
+      Tracy Becker</span>
+      </div>
+      
+    </div>
+
+    
+    <div class="btn-links">
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+<a class="btn btn-outline-primary btn-page-header btn-sm" href="/publication/16csce/16CSCE.pdf" target="_blank" rel="noopener">
+  PDF
+</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+    
+
+  </div>
+  <div class="ml-3">
+    
+    
+  </div>
+</div>
+
+    
+  
+    
+      
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+  
+
+
+<div class="media stream-item">
+  <div class="media-body">
+
+    <div class="section-subheading article-title mb-0 mt-0">
+      <a href="/publication/11ccee/" >Preliminary Study on the Behaviour of a Column-Top Isolation System</a>
+    </div>
+
+    
+    <a href="/publication/11ccee/"  class="summary-link">
+      <div class="article-style">
+        Seismic isolation offers considerable improvement to earthquake resistance by means of a flexible layer between the ground and …
+      </div>
+    </a>
+    
+
+    <div class="stream-meta article-metadata">
+
+      
+
+      
+      <div>
+        
+
+  <span class="author-highlighted">
+      Adrian Crowder</span>, <span >
+      Tracy Becker</span>
+      </div>
+      
+    </div>
+
+    
+    <div class="btn-links">
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+<a class="btn btn-outline-primary btn-page-header btn-sm" href="/publication/11ccee/11CCEE.pdf" target="_blank" rel="noopener">
+  PDF
+</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
