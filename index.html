@@ -1663,8 +1663,9 @@ window.onkeydown = function (e) {
 </div>
 <div style="position:relative;">
   <div id="map" style="height:500px"></div>
-  <div id="infoPopup" style="background-color:white; position:absolute; z-index:99; padding:15px; top:15px; bottom:15px; left:15px; right:15px; visibility:hidden;">
-    <img id="projectImg" src="uploads/projects/30912-01-Courthouse-1.jpg" style="max-height:250px; pointer-events:none; user-select:none;">
+  <div id="infoPopup" style="background-color:white; position:absolute; z-index:99; padding:15px; top:20px; bottom:20px; left:20px; right:20px; visibility:hidden; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+    <img id="closePopUp" src="uploads/icons/close.svg" width="13px" height="13px" style="position:absolute; right:15px; top:15px; cursor:pointer;" onclick="setPopUpVisibility(false)">
+    <img id="projectImg" src="" style="max-height:250px; pointer-events:none; user-select:none;">
     <div>
       <h2 id="projectName">Project Name</h2>
       <span style="margin-right:30px;">
