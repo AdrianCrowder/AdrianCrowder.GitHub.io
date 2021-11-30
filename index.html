@@ -1469,18 +1469,21 @@ var projects;
 
 
 function initMap() {
-  const initLatLng = { lat: 41.91198, lng: -110.43058}
   map = new google.maps.Map(document.getElementById('map'), {
-      center: initLatLng,
-      zoom: 4,
       mapId: "9beed1c0df4b395f",
       mapTypeControl: false,
       scaleControl: false,
       streetViewControl: false,
+      fullscreenControl: false,
       gestureHandling: "greedy",
   });
   
-  readProjects("uploads/projects/" + projectDatabaseFile).then( () => {setMarkers(map)});
+  readProjects("uploads/projects/" + projectDatabaseFile).then( () => {
+    setMarkers();
+    zoomExtents();
+    populateFilterType();
+    populateFilterCity();
+  });
 }
 
 
@@ -1532,7 +1535,7 @@ function extractData(text) {
 
 
 
-function setMarkers(map) {
+function setMarkers() {
   var iconType;
   for (let i = 0; i < projects.length; i++) {
     switch (projects[i][2]) {
@@ -1608,22 +1611,96 @@ function setPopUpVisibility(showPopUp, showImg) {
     popUp.style.visibility = "visible";
     
     // Hide the map controls
-    map.setOptions({
-      fullscreenControl: false,
-      zoomControl: false
-    });
+    map.setOptions({ zoomControl: false });
   } else {
     img.style.display = "none";
     popUp.style.visibility = "hidden";
     
     // show the map controls
-    map.setOptions({
-      fullscreenControl: true,
-      zoomControl: true
-    });
+    map.setOptions({ zoomControl: true });
   }
 }
 
+
+
+function zoomExtents() {
+  var bounds = new google.maps.LatLngBounds();
+  for (let i = 0; i < projects.length; i++)
+    if (projects[i][0].getVisible())
+      bounds.extend(projects[i][0].position);
+  
+  map.fitBounds(bounds);
+  
+  let maxZoom = 16;
+  if (map.getZoom() > maxZoom)
+    map.setZoom(maxZoom);
+}
+
+
+
+
+function populateFilterType() {
+    
+}
+
+
+function populateFilterCity() {
+  var select = document.getElementById("filterCity");
+  var uniqueCities = [];
+  var uniqueCitiesCount = [];
+  
+  var index;
+  for (let i = 0; i < projects.length; i++) {
+    index = uniqueCities.indexOf(projects[i][13]);
+    
+    if (index == -1) {
+      uniqueCities.push(projects[i][13]);
+      uniqueCitiesCount.push(1);
+    } else
+      uniqueCitiesCount[index] += 1;
+  }
+  
+  // Sort them by order of most projects to least
+  uniqueCities.sort((a, b) => uniqueCitiesCount[uniqueCities.indexOf(b)] - uniqueCitiesCount[uniqueCities.indexOf(a)]);
+      
+  var innerHtmlString = '<option value="All">All</option>';
+  uniqueCities.forEach( city => innerHtmlString += '<option value="' + city + '">' + city + '</option>');
+  select.innerHTML = innerHtmlString;
+}
+
+
+
+
+function filterFeatured() {
+  
+}
+
+
+function filterType() {
+  
+}
+
+
+function filterCity() {
+  var select = document.getElementById("filterCity");
+  var filter = select.value;
+  var showAll = filter == "All";
+  
+  for (let i = 0; i < projects.length; i++) {
+    if (showAll || projects[i][13] == filter) {
+      projects[i][0].setVisible(true);
+    } else {
+      projects[i][0].setVisible(false);
+    }
+  }
+  
+  zoomExtents();
+}
+
+
+function filterStories() {
+  
+}
 
 
 
@@ -1643,29 +1720,29 @@ window.onkeydown = function (e) {
 <div id="projectFilter" style="text-align:center;">
   <span style="margin-right:15px;"><b>Filters:</b></span>
   <span style="margin-right:15px;">
+    <input type="checkbox" id="filterFeatured" oninput="filterFeatured()"> <label for="filterFeatured">Featured</label>
+  </span>
+  <span style="margin-right:15px;">
     <input type="checkbox" id="typeRes"> <label for="typeRes">Residential</label>
   </span>
   <span style="margin-right:15px;">
-    <label for="typeRes">City</label>
-    <select name="selectCity" id="selectCity">
+    <label for="filterCity">City</label>
+    <select name="filterCity" id="filterCity" oninput="filterCity()">
       <option value="All">All</option>
-      <option value="Vancouver">Vancouver</option>
-      <option value="Surrey">Surrey</option>
-      <option value="San Diego">San Diego</option>
     </select>
   </span>
-  <span style="margin-right:0px">
-    <label for="Stories" style="margin-right:5px">Stories</label>
-    <span id="storyRangeMin" style="width:2em">0</span>
-    <input type="range" id="storySlider" name="storySlider" min="0" max="60" value="60">
-    <span id="storyRangeUpper" style="width:2em">60</span>
+  <span style="margin-right:15px">
+    <label for="filterStories" style="margin-right:5px">Stories</label>
+    <span id="filterStoriesMin" style="width:2em">0</span>
+      <input type="range" id="filterStoriesSliderMin" name="filterStoriesSliderMin" min="0" max="60" value="60">
+    <span id="filterStoriesMax" style="width:2em">60</span>
   </span>
 </div>
 <div style="position:relative;">
   <div id="map" style="height:500px"></div>
   <div id="infoPopup" style="background-color:white; position:absolute; z-index:99; padding:15px; top:20px; bottom:20px; left:20px; right:20px; visibility:hidden; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
     <img id="closePopUp" src="uploads/icons/close.svg" width="13px" height="13px" style="position:absolute; right:15px; top:15px; cursor:pointer;" onclick="setPopUpVisibility(false)">
-    <img id="projectImg" src="" style="max-height:250px; pointer-events:none; user-select:none;">
+    <img id="projectImg" src="" style="max-height:200px; pointer-events:none; user-select:none;">
     <div>
       <h2 id="projectName">Project Name</h2>
       <span style="margin-right:30px;">
