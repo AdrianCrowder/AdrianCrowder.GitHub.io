@@ -1453,7 +1453,7 @@
 <script>
 // Setup the project database file
 const projectDatabaseFile = "projects.csv";
-const ProjectDatabaseNumberMap = [4, 5, 6, 13, 14];
+const ProjectDatabaseNumberMap = [4, 5, 6, 14, 15];
 
 // Map icons
 const iconRes = "https://mt.google.com/vt/icon/name=icons/onion/SHARED-mymaps-container-bg_4x.png,icons/onion/SHARED-mymaps-container_4x.png,icons/onion/1603-house_4x.png&highlight=ff000000,0288D1,ff000000&scale=1.0";
@@ -1482,7 +1482,7 @@ function initMap() {
     setMarkers();
     zoomExtents();
     populateFilterType();
-    populateFilterCity();
+    populateFilterRegion();
   });
 }
 
@@ -1562,7 +1562,7 @@ function setMarkers() {
     }
     
     projects[i][0] = new google.maps.Marker({
-      position: { lat: projects[i][14], lng: projects[i][15] },
+      position: { lat: projects[i][15], lng: projects[i][16] },
       map,
       title: projects[i][1],
       icon: iconType,
@@ -1585,10 +1585,10 @@ function setProjectInfo(project) {
   
   // hide the image if no image, if there is, wait until it's fully loaded before showing it
   var img = document.getElementById("projectImg");
-  if (project[16] == "")
+  if (project[17] == "")
     setPopUpVisibility(true, false);
   else {
-    img.src = "uploads/projects/" + project[16];
+    img.src = "uploads/projects/" + project[17];
     
     if (img.complete)
       setPopUpVisibility(true, true);
@@ -1640,21 +1640,41 @@ function zoomExtents() {
 
 
 function populateFilterType() {
+  var select = document.getElementById("filterType");
+  var uniqueTypes = [];
+  var uniqueTypesCount = [];
+  
+  var index;
+  for (let i = 0; i < projects.length; i++) {
+    index = uniqueTypes.indexOf(projects[i][2]);
     
+    if (index == -1) {
+      uniqueTypes.push(projects[i][2]);
+      uniqueTypesCount.push(1);
+    } else
+      uniqueTypesCount[index] += 1;
+  }
+  
+  // Sort them by order of most projects to least
+  uniqueTypes.sort((a, b) => uniqueTypesCount[uniqueTypes.indexOf(b)] - uniqueTypesCount[uniqueTypes.indexOf(a)]);
+      
+  var innerHtmlString = '<option value="All">All</option>';
+  uniqueTypes.forEach( type => innerHtmlString += '<option value="' + type + '">' + type + '</option>');
+  select.innerHTML = innerHtmlString;
 }
 
 
-function populateFilterCity() {
-  var select = document.getElementById("filterCity");
+function populateFilterRegion() {
+  var select = document.getElementById("filterRegion");
   var uniqueCities = [];
   var uniqueCitiesCount = [];
   
   var index;
   for (let i = 0; i < projects.length; i++) {
-    index = uniqueCities.indexOf(projects[i][13]);
+    index = uniqueCities.indexOf(projects[i][14]);
     
     if (index == -1) {
-      uniqueCities.push(projects[i][13]);
+      uniqueCities.push(projects[i][14]);
       uniqueCitiesCount.push(1);
     } else
       uniqueCitiesCount[index] += 1;
@@ -1671,35 +1691,67 @@ function populateFilterCity() {
 
 
 
-function filterFeatured() {
-  
-}
+//function filterFeatured() {
+//  
+//}
+//
+//
+//function filterType() {
+//  var select = document.getElementById("filterType");
+//  var filter = select.value;
+//  var showAll = filter == "All";
+//  
+//  for (let i = 0; i < projects.length; i++) {
+//    if (showAll || projects[i][2] == filter) {
+//      projects[i][0].setVisible(true);
+//    } else {
+//      projects[i][0].setVisible(false);
+//    }
+//  }
+//  
+//  zoomExtents();
+//}
+//
+//
+//function filterCity() {
+//  var select = document.getElementById("filterCity");
+//  var filter = select.value;
+//  var showAll = filter == "All";
+//  
+//  for (let i = 0; i < projects.length; i++) {
+//    if (showAll || projects[i][14] == filter) {
+//      projects[i][0].setVisible(true);
+//    } else {
+//      projects[i][0].setVisible(false);
+//    }
+//  }
+//  
+//  zoomExtents();
+//}
+//
+//
+//function filterStories() {
+//  
+//}
 
 
-function filterType() {
-  
-}
 
+// Revised function to allow multiple filtering
+function filter() {
+  var filterFeatured = document.getElementById("filterFeatured").value;
+  var filterType = document.getElementById("filterType").value;
+  var filterRegion = document.getElementById("filterRegion").value;
 
-function filterCity() {
-  var select = document.getElementById("filterCity");
-  var filter = select.value;
-  var showAll = filter == "All";
-  
   for (let i = 0; i < projects.length; i++) {
-    if (showAll || projects[i][13] == filter) {
-      projects[i][0].setVisible(true);
-    } else {
-      projects[i][0].setVisible(false);
-    }
+    // set marker visibility based on sum of true/false filters
+    projects[i][0].setVisible(
+      (!filterFeatured || (filterFeatured && true)) &&            // Filter featured, replace true with criteria to check if a project is visible
+      (filterType == "All" || projects[i][2] == filterType) &&    // Filter type
+      (filterRegion == "All" || projects[i][14] == filterRegion)      // Filter city
+    );
   }
-  
+
   zoomExtents();
-}
-
-
-function filterStories() {
-  
 }
 
 
@@ -1720,14 +1772,17 @@ window.onkeydown = function (e) {
 <div id="projectFilter" style="text-align:center;">
   <span style="margin-right:15px;"><b>Filters:</b></span>
   <span style="margin-right:15px;">
-    <input type="checkbox" id="filterFeatured" oninput="filterFeatured()"> <label for="filterFeatured">Featured</label>
+    <input type="checkbox" id="filterFeatured" oninput="filter()"> <label for="filterFeatured">Featured</label>
   </span>
   <span style="margin-right:15px;">
-    <input type="checkbox" id="typeRes"> <label for="typeRes">Residential</label>
+    <label for="filterType">Type</label>
+    <select name="filterType" id="filterType" oninput="filter()">
+      <option value="All">All</option>
+    </select>
   </span>
   <span style="margin-right:15px;">
-    <label for="filterCity">City</label>
-    <select name="filterCity" id="filterCity" oninput="filterCity()">
+    <label for="filterRegion">Region</label>
+    <select name="filterRegion" id="filterRegion" oninput="filter()">
       <option value="All">All</option>
     </select>
   </span>
@@ -2750,7 +2805,7 @@ sliderUpper.addEventListener('input', function () {
 
   
   <p class="powered-by">
-    © 2021 Adrian Crowder
+    © 2022 Adrian Crowder
   </p>
   
 
