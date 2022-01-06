@@ -1455,6 +1455,31 @@
 const projectDatabaseFile = "projects.csv";
 const ProjectDatabaseNumberMap = [4, 5, 6, 14, 15];
 
+// Setup project database file indicies
+const numProjectColumns = 21;
+const iProjectName = 1;
+const iProjectCat1 = 2;
+const iProjectCat2 = 3;
+const iProjectCat3 = 4;
+const iProjectYear = 5;
+const iProjectNumStories = 6;
+const iProjectNumParking = 7;
+const iProjectMat1 = 8;
+const iProjectMat2 = 9;
+const iProjectMat3 = 10;
+const iProjectDesc = 11;
+const iProjectInvol = 12;
+const iProjectCity = 13;
+const iProjectRegion = 14;
+const iProjectLat = 15;
+const iProjectLong = 16;
+const iProjectPic1 = 17;
+const iProjectPic2 = 18;
+const iProjectPic3 = 19;
+const iProjectPic4 = 20;
+const iProjectPic5 = 21;
+
+
 // Map icons
 const iconRes = "https://mt.google.com/vt/icon/name=icons/onion/SHARED-mymaps-container-bg_4x.png,icons/onion/SHARED-mymaps-container_4x.png,icons/onion/1603-house_4x.png&highlight=ff000000,0288D1,ff000000&scale=1.0";
 const iconCom = "https://mt.google.com/vt/icon/name=icons/onion/SHARED-mymaps-container-bg_4x.png,icons/onion/SHARED-mymaps-container_4x.png,icons/onion/1685-shopping-cart_4x.png&highlight=ff000000,0F9D58,ff000000&scale=1.0";
@@ -1483,6 +1508,10 @@ function initMap() {
     zoomExtents();
     populateFilterType();
     populateFilterRegion();
+
+
+
+    setProjectInfo(projects[37]);
   });
 }
 
@@ -1513,20 +1542,48 @@ function extractData(text) {
   let rows = text.split("\r\n");
   
   projects = [];
-  var splitRow;
+  var splitCommas;
+  var split;
   var tempVal;
   for (let i = 1; i < rows.length - 1; i++) {
-    splitRow = rows[i].split(",");
-    
-    // Initialize array size
-    projects[i - 1] = Array(splitRow.length + 1);
-    
-    // Set the values
-    for (let j = 0; j < splitRow.length; j++) {
-      if (ProjectDatabaseNumberMap.includes(j))
-        projects[i - 1][j + 1] = +splitRow[j];
-      else
-        projects[i - 1][j + 1] = splitRow[j];
+    // Set placeholder for marker to be stored
+    projects[i - 1] = [0];
+
+    // First split by double quotes, odd numbers in the split are between quotes
+    splitQuotes = rows[i].split("\"\"\"");
+
+    for (let j = 0; j < splitQuotes.length; j++) {
+      // If it's on an odd number (in quotes) then add it and move on
+      if (j % 2 == 1) {
+        //projects[i - 1][j + 1] = splitQuotes[j];
+        projects[i - 1].push(splitQuotes[j]);
+        continue;
+      }
+      else {
+        if (splitQuotes.length > 0) {
+          // if there is a quote after this, remove the comma at the end of this string
+          if (j + 2 <= splitQuotes.length)
+           splitQuotes[j] = splitQuotes[j].substring(0, splitQuotes[j].length - 1);
+
+          // if there is a quote before this, remove the comma at the start of the string
+          if (j > 0)
+            splitQuotes[j] = splitQuotes[j].substring(1);
+        }
+      }
+
+      // split the csv
+      splitCommas = splitQuotes[j].split(",");
+
+      // Add each value, convert to a number if it's index falls in the number mapping
+      for (let k = 0; k < splitCommas.length; k++) {
+        if (ProjectDatabaseNumberMap.includes(projects[i-1].length - 1))
+          if (splitCommas[k] == "")
+            projects[i - 1].push(NaN);
+          else
+            projects[i - 1].push(+splitCommas[k]);
+        else
+          projects[i - 1].push(splitCommas[k]);
+      }
     }
   }
   return Promise.resolve(projects);
@@ -1538,7 +1595,7 @@ function extractData(text) {
 function setMarkers() {
   var iconType;
   for (let i = 0; i < projects.length; i++) {
-    switch (projects[i][2]) {
+    switch (projects[i][iProjectCat1]) {
       case "Residential":
         iconType = iconRes;
         break;
@@ -1562,9 +1619,9 @@ function setMarkers() {
     }
     
     projects[i][0] = new google.maps.Marker({
-      position: { lat: projects[i][15], lng: projects[i][16] },
+      position: { lat: projects[i][iProjectLat], lng: projects[i][iProjectLong] },
       map,
-      title: projects[i][1],
+      title: projects[i][iProjectName],
       icon: iconType,
     });
     
@@ -1574,52 +1631,161 @@ function setMarkers() {
 
 
 function setProjectInfo(project) {
-  //map.setCenter({ lat: project[8], lng: project[9] });
+  document.getElementById("projectName").innerHTML = project[iProjectName];
+  document.getElementById("projectDate").innerHTML = project[iProjectYear];
+
+  var levelsId = document.getElementById("projectLevels");
+  if (isNaN(project[iProjectNumStories])) {
+    levelsId.style.visibility = "hidden";
+  }
+  else {
+    levelsId.style.visibility = "inherit";
+    document.getElementById("projectStories").innerHTML = project[iProjectNumStories];
+    document.getElementById("projectParking").innerHTML = project[iProjectNumParking];
+  }
+
+  document.getElementById("projectDesc").innerHTML = project[iProjectDesc];
+  document.getElementById("projectInvol").innerHTML = project[iProjectInvol];
+
   
-  //let z = map.getZoom();
-  //if (z < 10)
-  //  map.setZoom(14 - z/2);
-  
-  document.getElementById("projectName").innerHTML = project[1];
-  document.getElementById("projectDate").innerHTML = project[5];
   
   // hide the image if no image, if there is, wait until it's fully loaded before showing it
-  var img = document.getElementById("projectImg");
-  if (project[17] == "")
+  var img = document.getElementById("projectImg1");
+  if (project[iProjectPic1] == "") {
+    img.src = "";
     setPopUpVisibility(true, false);
+  }
   else {
-    img.src = "uploads/projects/" + project[17];
+    img.src = "uploads/projects/" + project[iProjectPic1];
     
     if (img.complete)
       setPopUpVisibility(true, true);
     else
       img.addEventListener('load', () => { setPopUpVisibility(true, true); });
   }
+
+
+  // Load any remaining images
+  var imgFileName;
+  var galleryDotId;
+  for (let i = 2; i <= 5; i++) {
+    galleryDot = document.getElementById("galleryDot" + i);
+    imgFileName = project[eval("iProjectPic" + i)];
+    
+    if (imgFileName == "") {
+      document.getElementById("projectImg" + i).src = "";
+      galleryDot.style.display = "none";
+      continue;
+    }
+    
+    document.getElementById("projectImg" + i).src = "uploads/projects/" + imgFileName;
+    galleryDot.style.display = "";
+  }
 }
 
 
 function setPopUpVisibility(showPopUp, showImg) {
   var popUp = document.getElementById("infoPopup");
-  var img = document.getElementById("projectImg");
+  var img = document.getElementById("projectImg1");
+  var arrows = document.getElementsByClassName("acArrowContainer");
+  var galleryDots = document.getElementById("galleryDotContainer");
   
   if (showPopUp) {
-    if (showImg)
-      img.style.display = "block";
-    else
-      img.style.display = "none";
+    if (showImg) {
+      showGalleryImage(1);
+      arrows[0].style.visibility = "inherit";
+      arrows[1].style.visibility = "inherit";
+      galleryDots.style.display = "block";
+    }
+    else {
+      showGalleryImage();
+      arrows[0].style.visibility = "hidden";
+      arrows[1].style.visibility = "hidden";
+      galleryDots.style.display = "none";
+    }
     
     popUp.style.visibility = "visible";
     
     // Hide the map controls
     map.setOptions({ zoomControl: false });
   } else {
-    img.style.display = "none";
     popUp.style.visibility = "hidden";
     
     // show the map controls
     map.setOptions({ zoomControl: true });
   }
 }
+
+
+
+
+
+
+
+
+function showGalleryImage(number) {
+  // Show the image
+  document.getElementById("projectImg1").style.display = ((number == 1) ? "block" : "none");
+  document.getElementById("projectImg2").style.display = ((number == 2) ? "block" : "none");
+  document.getElementById("projectImg3").style.display = ((number == 3) ? "block" : "none");
+  document.getElementById("projectImg4").style.display = ((number == 4) ? "block" : "none");
+  document.getElementById("projectImg5").style.display = ((number == 5) ? "block" : "none");
+
+  // Highlight the corresponding dot
+  document.getElementById("galleryDot1").style.backgroundColor = ((number == 1) ? "#fff" : "#bbb");
+  document.getElementById("galleryDot2").style.backgroundColor = ((number == 2) ? "#fff" : "#bbb");
+  document.getElementById("galleryDot3").style.backgroundColor = ((number == 3) ? "#fff" : "#bbb");
+  document.getElementById("galleryDot4").style.backgroundColor = ((number == 4) ? "#fff" : "#bbb");
+  document.getElementById("galleryDot5").style.backgroundColor = ((number == 5) ? "#fff" : "#bbb");
+}
+
+
+function getAvailableAndActiveImages() {
+  var projectImgIndicies = [];
+  var curEle;
+  var activeIndex;
+
+  // Loop through all images and get list of available images plus which is currently active
+  for (let i = 1; i <= 5; i++) {
+    curEle = document.getElementById("projectImg" + i);
+    if (curEle.src == document.URL)
+      continue;
+    
+    projectImgIndicies.push(i);
+
+    if (curEle.style.display == "block")
+      activeIndex = projectImgIndicies.length - 1;
+  }
+
+  return {
+    activeIndex,
+    projectImgIndicies
+  };
+}
+
+
+function showPrevGalleryImage() {
+  let r = getAvailableAndActiveImages();
+
+  var adjustIndex = r.activeIndex - 1;
+  if (adjustIndex < 0)
+    adjustIndex = r.projectImgIndicies.length - 1;
+
+  showGalleryImage(r.projectImgIndicies[adjustIndex]);
+}
+
+
+function showNextGalleryImage() {
+  let r = getAvailableAndActiveImages();
+
+  var adjustIndex = r.activeIndex + 1;
+  if (adjustIndex >= r.projectImgIndicies.length)
+    adjustIndex = 0;
+
+  showGalleryImage(r.projectImgIndicies[adjustIndex]);
+}
+
+
 
 
 
@@ -1646,10 +1812,10 @@ function populateFilterType() {
   
   var index;
   for (let i = 0; i < projects.length; i++) {
-    index = uniqueTypes.indexOf(projects[i][2]);
+    index = uniqueTypes.indexOf(projects[i][iProjectCat1]);
     
     if (index == -1) {
-      uniqueTypes.push(projects[i][2]);
+      uniqueTypes.push(projects[i][iProjectCat1]);
       uniqueTypesCount.push(1);
     } else
       uniqueTypesCount[index] += 1;
@@ -1671,10 +1837,10 @@ function populateFilterRegion() {
   
   var index;
   for (let i = 0; i < projects.length; i++) {
-    index = uniqueCities.indexOf(projects[i][14]);
+    index = uniqueCities.indexOf(projects[i][iProjectRegion]);
     
     if (index == -1) {
-      uniqueCities.push(projects[i][14]);
+      uniqueCities.push(projects[i][iProjectRegion]);
       uniqueCitiesCount.push(1);
     } else
       uniqueCitiesCount[index] += 1;
@@ -1690,52 +1856,6 @@ function populateFilterRegion() {
 
 
 
-
-//function filterFeatured() {
-//  
-//}
-//
-//
-//function filterType() {
-//  var select = document.getElementById("filterType");
-//  var filter = select.value;
-//  var showAll = filter == "All";
-//  
-//  for (let i = 0; i < projects.length; i++) {
-//    if (showAll || projects[i][2] == filter) {
-//      projects[i][0].setVisible(true);
-//    } else {
-//      projects[i][0].setVisible(false);
-//    }
-//  }
-//  
-//  zoomExtents();
-//}
-//
-//
-//function filterCity() {
-//  var select = document.getElementById("filterCity");
-//  var filter = select.value;
-//  var showAll = filter == "All";
-//  
-//  for (let i = 0; i < projects.length; i++) {
-//    if (showAll || projects[i][14] == filter) {
-//      projects[i][0].setVisible(true);
-//    } else {
-//      projects[i][0].setVisible(false);
-//    }
-//  }
-//  
-//  zoomExtents();
-//}
-//
-//
-//function filterStories() {
-//  
-//}
-
-
-
 // Revised function to allow multiple filtering
 function filter() {
   var filterFeatured = document.getElementById("filterFeatured").value;
@@ -1745,9 +1865,9 @@ function filter() {
   for (let i = 0; i < projects.length; i++) {
     // set marker visibility based on sum of true/false filters
     projects[i][0].setVisible(
-      (!filterFeatured || (filterFeatured && true)) &&            // Filter featured, replace true with criteria to check if a project is visible
-      (filterType == "All" || projects[i][2] == filterType) &&    // Filter type
-      (filterRegion == "All" || projects[i][14] == filterRegion)      // Filter city
+      (!filterFeatured || (filterFeatured && true)) &&                        // Filter featured, replace true with criteria to check if a project is visible
+      (filterType == "All" || projects[i][iProjectCat1] == filterType) &&     // Filter type
+      (filterRegion == "All" || projects[i][iProjectRegion] == filterRegion)  // Filter region
     );
   }
 
@@ -1768,7 +1888,90 @@ window.onkeydown = function (e) {
 
 // see https://stackoverflow.com/questions/19206919/how-to-create-checkbox-inside-dropdown
 // for dropdown checklist
+
+
+// popup image max-height: 200px if in stacked/mobile view, max-width: 40% if in side by side/desktop view
 </script>
+<style>
+  /* see https://www.w3schools.com/howto/howto_js_slideshow.asp */
+  .acProjectImg {
+    max-width: 100%;
+    max-height: 100%;
+    pointer-events: none;
+    user-select: none;
+    display: none;
+  }
+
+  .acArrowContainer {
+    visibility: inherit;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    width: 30px;
+    height: 60px;
+    line-height:60px;
+    color: white;
+    background-color: rgba(0,0,0,0.4);
+    font-weight: bold;
+    font-size: 18px;
+    user-select: none;
+  }
+
+  #projectImgPrev {
+    border-radius: 0px 30px 30px 0px;
+    left: 0px;
+    text-align: left;
+  }
+
+  #projectImgNext {
+    border-radius: 30px 0px 0px 30px;
+    right: 0px;
+    text-align: right;
+  }
+
+  .acArrowContainer:hover {
+    color: white;
+    background-color: rgba(0,0,0,0.7);
+    text-decoration: none;
+  }
+
+  .acArrow {
+    display: inline-block;
+    vertical-align: middle;
+    line-height: normal;
+    padding: 0px 7px 4px;
+  }
+
+  #galleryDotContainer {
+    visibility: inherit;
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+    padding: 0px 12px 2px;
+    background-color: rgba(0,0,0,0.4);
+    text-align: center;
+    line-height: 26px;
+    user-select: none;
+  }
+
+  .acGalleryDot {
+    cursor: pointer;
+    display: inline-block;
+    height: 10px;
+    width: 10px;
+    margin: 0 3px;
+    background-color: #bbb;
+    border-radius: 50%;
+  }
+
+  .acGalleryDot:hover {
+    background-color: #fff;
+  }
+</style>
 <div id="projectFilter" style="text-align:center;">
   <span style="margin-right:15px;"><b>Filters:</b></span>
   <span style="margin-right:15px;">
@@ -1796,19 +1999,48 @@ window.onkeydown = function (e) {
 <div style="position:relative;">
   <div id="map" style="height:500px"></div>
   <div id="infoPopup" style="background-color:white; position:absolute; z-index:99; padding:15px; top:20px; bottom:20px; left:20px; right:20px; visibility:hidden; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
-    <img id="closePopUp" src="uploads/icons/close.svg" width="13px" height="13px" style="position:absolute; right:15px; top:15px; cursor:pointer;" onclick="setPopUpVisibility(false)">
-    <img id="projectImg" src="" style="max-height:200px; pointer-events:none; user-select:none;">
-    <div>
-      <h2 id="projectName">Project Name</h2>
-      <span style="margin-right:30px;">
-        <span>Year:</span>
-        <span id="projectDate">2019</span>
-      </span
-      <span>
-        <span id="projectStories">20</span>
-        <span>stories above grade</span>
-      </span>
+    <div style="position:absolute; top:20px; bottom:20px; left:20px; right:20px; display:grid; grid-template-columns:auto auto; grid-template-rows:1.8em minmax(0,1fr); grid-row-gap:10px; grid-column-gap:20px; justify-content:start; align-content:start;">
+      <h2 id="projectName" style="margin:0; text-align:center; grid-column:1 / span 2">Project Name</h2>
+      <div style="position:relative; background-color:#999999;">
+        <img id="projectImg1" src="" class="acProjectImg" style="display:block;">
+        <img id="projectImg2" src="" class="acProjectImg">
+        <img id="projectImg3" src="" class="acProjectImg">
+        <img id="projectImg4" src="" class="acProjectImg">
+        <img id="projectImg5" src="" class="acProjectImg">
+        <div class="acArrowContainer" id="projectImgPrev"><span class="acArrow" onclick="showPrevGalleryImage()">&#10094;</span></div>
+        <div class="acArrowContainer" id="projectImgNext"><span class="acArrow" onclick="showNextGalleryImage()">&#10095;</span></div>
+        <div id="galleryDotContainer">
+          <span id="galleryDot1" class="acGalleryDot" onclick="showGalleryImage(1)"></span>
+          <span id="galleryDot2" class="acGalleryDot" onclick="showGalleryImage(2)"></span>
+          <span id="galleryDot3" class="acGalleryDot" onclick="showGalleryImage(3)"></span>
+          <span id="galleryDot4" class="acGalleryDot" onclick="showGalleryImage(4)"></span>
+          <span id="galleryDot5" class="acGalleryDot" onclick="showGalleryImage(5)"></span>
+        </div>
+      </div>
+      <div style="overflow-y:auto;">
+        <div>
+          <span style="margin-right:30px;">
+            <span>Year:</span>
+            <span id="projectDate">2019</span>
+          </span>
+          <span id="projectLevels">
+            <span>Stories:</span>
+            <span id="projectStories">0</span>
+            <span>above grade,</span>
+            <span id="projectParking">0</span> 
+            <span>below</span>
+          </span>
+        </div>
+        <div>
+          <span id="projectDesc">Description</span>
+        </div>
+        <div>
+          <span style="font-weight:bold">Responsibilities:</span>
+          <span id="projectInvol">Involvement</span>
+        </div>
+      </div>
     </div>
+    <div style="position:absolute; right:14px; top:14px; cursor:pointer; padding: 1px; width:15px; height:15px;" onclick="setPopUpVisibility(false)"><img id="closePopUp" src="uploads/icons/close.svg"></div>
   </div>
 </div>
 <script>
