@@ -97,10 +97,6 @@
       
         
       
-        
-      
-        
-      
     
     
     
@@ -597,44 +593,7 @@
         
 
         <li class="nav-item">
-          <a class="nav-link " href="/#projectMap" data-target="#projectMap"><span>Project Map</span></a>
-        </li>
-
-        
-        
-
-        
-
-        
-        
-        
-          
-        
-
-        
-
-        
-        
-        
-        
-
-        
-          
-            
-            
-          
-          
-            
-            
-            
-              
-            
-            
-          
-        
-
-        <li class="nav-item">
-          <a class="nav-link " href="/#projects" data-target="#projects"><span>Featured Projects</span></a>
+          <a class="nav-link " href="/#projects" data-target="#projects"><span>Projects</span></a>
         </li>
 
         
@@ -672,43 +631,6 @@
 
         <li class="nav-item">
           <a class="nav-link " href="/#publications" data-target="#publications"><span>Publications</span></a>
-        </li>
-
-        
-        
-
-        
-
-        
-        
-        
-          
-        
-
-        
-
-        
-        
-        
-        
-
-        
-          
-            
-            
-          
-          
-            
-            
-            
-              
-            
-            
-          
-        
-
-        <li class="nav-item">
-          <a class="nav-link " href="/#contact" data-target="#contact"><span>Contact</span></a>
         </li>
 
         
@@ -863,27 +785,12 @@
 
       <div class="portrait-title">
         <h2>Adrian Crowder</h2>
-        <h3>MASc. P.Eng | Structural Engineer</h3>
+        <h3>MASc. P.Eng.</br>Structural Engineer</br>Vancouver, BC</h3>
 
         
       </div>
 
       <ul class="network-icon" aria-hidden="true">
-        
-        
-        
-        
-          
-        
-        
-        
-        
-        
-        <li>
-          <a href="mailto:adrian_crowder@live.com"  aria-label="envelope">
-            <i class="fas fa-envelope big-icon"></i>
-          </a>
-        </li>
         
         
         
@@ -913,8 +820,7 @@
 
     <div class="article-style">
       <p>Welcome to my portfolio. Here you’ll find bits of what I do as a structural engineer and what interests me within the field.</p>
-<p>At the heart of who I am is truly a learner. I like to thoroughly understand everything I do and seek ways to improve my designs with that understanding. What often follows are design tools I create to make life easier and more efficient for me and my colleagues.</p>
-<p>At a young age, my curiosity led me to learn about programming. That hobby has stayed with me for nearly two decades where I now use that skill to benefit my company. As a practicing structural engineer, I appreciate the frustrations with the software we use every day. Because of that, I make my own tools to be flexible enough to handle the unique and novel scenarios we encounter.</p>
+<p>At the heart of who I am is truly a learner. I like to thoroughly understand everything I do and seek ways to improve my designs with that understanding. What often follows are design tools I create to make life easier and more efficient for me and my colleagues. As a practicing structural engineer, I appreciate the frustrations with the software we use every day. Because of that, I make my tools to be flexible enough to handle the unique scenarios we encounter.</p>
 
     </div>
 
@@ -930,7 +836,7 @@
           <li>
             <i class="fa-li fas fa-graduation-cap"></i>
             <div class="description">
-              <p class="course">MASc. - Earthquake &amp; Structural Engineering, 2016</p>
+              <p class="course">M.A.Sc. - Earthquake &amp; Structural Engineering, 2016</p>
               <p class="institution">McMaster University</p>
             </div>
           </li>
@@ -1056,11 +962,9 @@
   
   
   
-    
-  
   <div class="col-12 col-sm-4">
     
-    <div class="featurette-icon"><i class="fas fa-building"></i></div>
+    <div class="featurette-icon"><img src="/media/icons/highrise.svg" alt="highrise" class="svg-icon svg-baseline"></div>
     
     <div class="section-subheading">High Rise Design</div>
     <p>45+ Stories</p>
@@ -1076,7 +980,7 @@
     <div class="featurette-icon"><i class="fas fa-book"></i></div>
     
     <div class="section-subheading">Strong Code Knowledge</div>
-    <p>NBCC, CSA A23.3, ACI 318</p>
+    <p>NBCC, CSA A23.3, ASCE-7, ACI 318</p>
   </div>
   
   
@@ -1234,14 +1138,14 @@
           </div>
           
 
-          <div class="card-text"><p>Design:</p>
+          <div class="card-text"><p>Design</p>
 <ul>
-<li>Conceptual design through detailed design of all primary building components</li>
-<li>Design of buildings from 3 to 45 stories</li>
+<li>Preliminary design through detailed design of all building components</li>
+<li>Design of buildings from 3 to 47 stories</li>
 <li>Residential, commercial, office &amp; institutional projects in BC, AB, MB, and California</li>
 <li>Attended consultant meetings to advise on structural concerns</li>
 <li>Document preparation for building permit, tender, and construction</li>
-<li>Reviewed and provided feedback of colleagues' designs</li>
+<li>Peer review of colleagues' and external designs</li>
 </ul>
 <p>Construction Administration</p>
 <ul>
@@ -1424,7 +1328,7 @@
   
 
   
-  <section id="projectMap" class="home-section wg-blank  "  >
+  <section id="projects" class="home-section wg-blank  "  >
    <div class="home-section-bg " >
      
    </div>
@@ -1435,7 +1339,7 @@
       
         
           <div class="section-heading col-12 mb-3 text-center">
-            <h1 class="mb-0">Project Map</h1>
+            <h1 class="mb-0">Projects</h1>
             
           </div>
         
@@ -1622,6 +1526,8 @@ function setMarkers() {
       position: { lat: projects[i][iProjectLat], lng: projects[i][iProjectLong] },
       map,
       title: projects[i][iProjectName],
+      //label: projects[i][iProjectName],
+      optimized: true,
       icon: iconType,
     });
     
@@ -1883,6 +1789,10 @@ function filter() {
 window.onkeydown = function (e) {
   if (e.key == "Escape")
     setPopUpVisibility(false);
+  else if (e.key == "ArrowLeft")
+    showPrevGalleryImage();
+  else if (e.key == "ArrowRight")
+    showNextGalleryImage();
 }
 
 
@@ -1974,9 +1884,11 @@ window.onkeydown = function (e) {
 </style>
 <div id="projectFilter" style="text-align:center;">
   <span style="margin-right:15px;"><b>Filters:</b></span>
+  <!--
   <span style="margin-right:15px;">
     <input type="checkbox" id="filterFeatured" oninput="filter()"> <label for="filterFeatured">Featured</label>
   </span>
+  -->
   <span style="margin-right:15px;">
     <label for="filterType">Type</label>
     <select name="filterType" id="filterType" oninput="filter()">
@@ -1989,12 +1901,14 @@ window.onkeydown = function (e) {
       <option value="All">All</option>
     </select>
   </span>
+  <!--
   <span style="margin-right:15px">
     <label for="filterStories" style="margin-right:5px">Stories</label>
     <span id="filterStoriesMin" style="width:2em">0</span>
       <input type="range" id="filterStoriesSliderMin" name="filterStoriesSliderMin" min="0" max="60" value="60">
     <span id="filterStoriesMax" style="width:2em">60</span>
   </span>
+  -->
 </div>
 <div style="position:relative;">
   <div id="map" style="height:500px"></div>
@@ -2054,255 +1968,6 @@ sliderUpper.addEventListener('input', function () {
 
   </div>
 
-
-
-    
-      </div>
-    
-
-    </div>
-  </section>
-
-  
-  
-  
-  
-
-  
-
-  
-
-  
-  
-  
-  
-
-  
-
-  
-
-  
-
-  
-  
-
-  
-
-  
-  
-
-  
-  
-  
-
-  
-  
-  
-  
-  
-
-  
-  
-
-  
-
-  
-  
-
-  
-  
-
-  
-  <section id="projects" class="home-section wg-portfolio  "  >
-   <div class="home-section-bg " >
-     
-   </div>
-    <div class="container">
-
-    
-      <div class="row  ">
-      
-        
-          <div class="section-heading col-12 col-lg-4 mb-3 mb-lg-0 d-flex flex-column align-items-center align-items-lg-start">
-            <h1 class="mb-0">Featured Projects</h1>
-            
-          </div>
-        
-      
-    
-
-      
-
-
-
-
-
-
-
-<div class="col-12 col-lg-8">
-
-  
-
-  
-
-    
-
-    
-    
-    
-    
-      
-    
-
-    <span class="d-none default-project-filter">*</span>
-
-    
-    
-    <div class="project-toolbar">
-      <div class="project-filters">
-        <div class="btn-toolbar">
-          <div class="btn-group flex-wrap">
-            
-              
-              
-              
-                
-              
-              <a href="#" data-filter="*" class="btn btn-primary btn-lg active">All</a>
-            
-              
-              
-              
-              <a href="#" data-filter=".js-id-Designs" class="btn btn-primary btn-lg">Designs</a>
-            
-              
-              
-              
-              <a href="#" data-filter=".js-id-Tools" class="btn btn-primary btn-lg">Tools</a>
-            
-              
-              
-              
-              <a href="#" data-filter=".js-id-Research" class="btn btn-primary btn-lg">Research</a>
-            
-          </div>
-        </div>
-      </div>
-    </div>
-    
-  
-
-  <div class="isotope projects-container row js-layout-row ">
-
-    
-    
-      
-    
-
-    
-
-      
-      
-      
-
-      
-        
-
-
-
-
-  
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-
-
-<div class="col-lg-12 project-item isotope-item js-id-Research js-id-Isolation">
-  <div class="row align-items-center">
-    <div class="col-12 col-md-6">
-      <div class="section-subheading article-title mb-0 mt-0"><a href="/project/thesis-topic/" >Thesis Topic: Low Cost Seismic Isolation</a></div>
-
-      
-      <div class="article-style">
-        A brief overview of my thesis topic and experimental work.
-      </div>
-      
-
-      <div class="btn-links">
-        
-
-
-
-
-
-
-
-
-  
-    
-  
-
-
-
-<a class="btn btn-outline-primary btn-page-header" href="http://hdl.handle.net/11375/19940" target="_blank" rel="noopener">
-  PDF
-</a>
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-    
-  
-<a class="btn btn-outline-primary btn-page-header" href="https://vimeo.com/186521191" target="_blank" rel="noopener">
-  Video
-</a>
-
-
-
-
-
-      </div>
-
-    </div>
-    <div class="col-12 col-md-6 order-first ">
-      
-      
-      
-      <a href="/project/thesis-topic/" >
-        <img src="/project/thesis-topic/featured_hu0c706eb38023c72dcb95dd861ff6eb43_2062211_540x0_resize_q75_lanczos.jpg" alt="Thesis Topic: Low Cost Seismic Isolation" loading="lazy">
-      </a>
-      
-    </div>
-  </div>
-</div>
-
-      
-
-    
-  </div>
-</div>
 
 
     
@@ -2823,188 +2488,6 @@ sliderUpper.addEventListener('input', function () {
 
   
   
-  
-
-</div>
-
-
-    
-      </div>
-    
-
-    </div>
-  </section>
-
-  
-  
-  
-  
-
-  
-
-  
-
-  
-  
-  
-  
-
-  
-
-  
-
-  
-
-  
-  
-
-  
-
-  
-  
-
-  
-  
-  
-
-  
-  
-  
-  
-  
-
-  
-  
-
-  
-
-  
-  
-
-  
-  
-
-  
-  <section id="contact" class="home-section wg-contact  "  >
-   <div class="home-section-bg " >
-     
-   </div>
-    <div class="container">
-
-    
-      <div class="row  ">
-      
-        
-          <div class="section-heading col-12 col-lg-4 mb-3 mb-lg-0 d-flex flex-column align-items-center align-items-lg-start">
-            <h1 class="mb-0">Contact</h1>
-            
-          </div>
-        
-      
-    
-
-      
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="col-12 col-lg-8">
-  
-
-  
-
-    
-    
-      
-    
-
-    <div class="mb-3">
-      <form name="contact" method="POST" netlify netlify-honeypot="_gotcha" data-netlify-recaptcha="true" >
-        <div class="form-group form-inline">
-          <label class="sr-only" for="inputName">Name</label>
-          <input type="text" name="name" class="form-control w-100" id="inputName" placeholder="Name" required>
-        </div>
-        <div class="form-group form-inline">
-          <label class="sr-only" for="inputEmail">Email</label>
-          <input type="email" name="email" class="form-control w-100" id="inputEmail" placeholder="Email" required>
-        </div>
-        <div class="form-group">
-          <label class="sr-only" for="inputMessage">Message</label>
-          <textarea name="message" class="form-control" id="inputMessage" rows="5" placeholder="Message" required></textarea>
-        </div>
-        
-        <div class="d-none">
-          <label>Do not fill this field unless you are a bot: <input name="_gotcha"></label>
-        </div>
-         
-          <div class="form-group" data-netlify-recaptcha="true"></div>
-        
-        <button type="submit" class="btn btn-primary px-3 py-2 w-100">Send</button>
-      </form>
-    </div>
-  
-
-  <ul class="fa-ul">
-
-    
-    <li>
-      <i class="fa-li fas fa-envelope fa-2x" aria-hidden="true"></i>
-      <span id="person-email"><a href="mailto:adrian_crowder@live.com">adrian_crowder@live.com</a></span>
-    </li>
-    
-
-    
-
-    
-    
-      
-      <li>
-        <i class="fa-li fas fa-map-marker fa-2x" aria-hidden="true"></i>
-        <span id="person-address">Vancouver, BC </span>
-      </li>
-    
-
-    
-
-    
-
-    
-
-    
-    
-    
-    
-    
-      
-    
-    
-    
-    
-    
-      
-    
-    <li>
-      <i class="fa-li fab fa-linkedin fa-2x" aria-hidden="true"></i>
-      <a href="https://ca.linkedin.com/in/adriancrowder" target="_blank" rel="noopener">Connect</a>
-    </li>
-    
-
-  </ul>
-
   
 
 </div>
