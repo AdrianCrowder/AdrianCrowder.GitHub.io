@@ -1764,14 +1764,14 @@ function populateFilterRegion() {
 
 // Revised function to allow multiple filtering
 function filter() {
-  var filterFeatured = document.getElementById("filterFeatured").value;
+  //var filterFeatured = document.getElementById("filterFeatured").value;
   var filterType = document.getElementById("filterType").value;
   var filterRegion = document.getElementById("filterRegion").value;
 
   for (let i = 0; i < projects.length; i++) {
     // set marker visibility based on sum of true/false filters
     projects[i][0].setVisible(
-      (!filterFeatured || (filterFeatured && true)) &&                        // Filter featured, replace true with criteria to check if a project is visible
+      //(!filterFeatured || (filterFeatured && true)) &&                        // Filter featured, replace true with criteria to check if a project is visible
       (filterType == "All" || projects[i][iProjectCat1] == filterType) &&     // Filter type
       (filterRegion == "All" || projects[i][iProjectRegion] == filterRegion)  // Filter region
     );
@@ -1805,8 +1805,6 @@ window.onkeydown = function (e) {
 <style>
   /* see https://www.w3schools.com/howto/howto_js_slideshow.asp */
   .acProjectImg {
-    max-width: 100%;
-    max-height: 100%;
     pointer-events: none;
     user-select: none;
     display: none;
@@ -1881,6 +1879,36 @@ window.onkeydown = function (e) {
   .acGalleryDot:hover {
     background-color: #fff;
   }
+
+  #acFlexContainer {
+    display: flex;
+    flex-direction: row;
+    height: 90%;
+  }
+
+  #acFlexItemGallery {
+    flex-grow: 0;
+    flex-shrink: 1;
+    flex-basis: 500px;
+    align-self: center;
+    margin-right: 10px;
+  }
+
+  #acFlexItemInfo {
+    flex-grow: 1;
+    flex-shrink: 2;
+    margin-left: 10px;
+    overflow-y: auto;
+  }
+
+  @media (max-width: 770px) {
+  #acFlexContainer {
+    flex-direction: column;
+  }
+  #acFlexItemGallery {
+    flex-basis: 200px;
+  }
+}
 </style>
 <div id="projectFilter" style="text-align:center;">
   <span style="margin-right:15px;"><b>Filters:</b></span>
@@ -1913,48 +1941,60 @@ window.onkeydown = function (e) {
 <div style="position:relative;">
   <div id="map" style="height:500px"></div>
   <div id="infoPopup" style="background-color:white; position:absolute; z-index:99; padding:15px; top:20px; bottom:20px; left:20px; right:20px; visibility:hidden; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
-    <div style="position:absolute; top:20px; bottom:20px; left:20px; right:20px; display:grid; grid-template-columns:auto auto; grid-template-rows:1.8em minmax(0,1fr); grid-row-gap:10px; grid-column-gap:20px; justify-content:start; align-content:start;">
-      <h2 id="projectName" style="margin:0; text-align:center; grid-column:1 / span 2">Project Name</h2>
-      <div style="position:relative; background-color:#999999;">
-        <img id="projectImg1" src="" class="acProjectImg" style="display:block;">
-        <img id="projectImg2" src="" class="acProjectImg">
-        <img id="projectImg3" src="" class="acProjectImg">
-        <img id="projectImg4" src="" class="acProjectImg">
-        <img id="projectImg5" src="" class="acProjectImg">
-        <div class="acArrowContainer" id="projectImgPrev"><span class="acArrow" onclick="showPrevGalleryImage()">&#10094;</span></div>
-        <div class="acArrowContainer" id="projectImgNext"><span class="acArrow" onclick="showNextGalleryImage()">&#10095;</span></div>
-        <div id="galleryDotContainer">
-          <span id="galleryDot1" class="acGalleryDot" onclick="showGalleryImage(1)"></span>
-          <span id="galleryDot2" class="acGalleryDot" onclick="showGalleryImage(2)"></span>
-          <span id="galleryDot3" class="acGalleryDot" onclick="showGalleryImage(3)"></span>
-          <span id="galleryDot4" class="acGalleryDot" onclick="showGalleryImage(4)"></span>
-          <span id="galleryDot5" class="acGalleryDot" onclick="showGalleryImage(5)"></span>
+    <div style="position:absolute; right:14px; top:14px; cursor:pointer; padding: 1px; width:15px; height:15px;" onclick="setPopUpVisibility(false)">
+      <img id="closePopUp" src="uploads/icons/close.svg">
+    </div>
+    <h2 id="projectName" style="margin:0; text-align:center;">Project Name</h2>
+    <!-- <div style="position:absolute; top:20px; bottom:20px; left:20px; right:20px; display:grid; grid-template-columns:auto auto; grid-template-rows:1.8em minmax(0,1fr); grid-row-gap:10px; grid-column-gap:20px; justify-content:start; align-content:start;">
+    </div> -->
+    <div id="acFlexContainer">
+      <div id="acFlexItemGallery" style="background-color:lightgrey">
+        <div style="position:relative; background-color:#999999;">
+          <img id="projectImg1" src="" class="acProjectImg" style="display:block;">
+          <img id="projectImg2" src="" class="acProjectImg">
+          <img id="projectImg3" src="" class="acProjectImg">
+          <img id="projectImg4" src="" class="acProjectImg">
+          <img id="projectImg5" src="" class="acProjectImg">
+          <div class="acArrowContainer" id="projectImgPrev">
+            <span class="acArrow" onclick="showPrevGalleryImage()">&#10094;</span>
+          </div>
+          <div class="acArrowContainer" id="projectImgNext">
+            <span class="acArrow" onclick="showNextGalleryImage()">&#10095;</span>
+          </div>
+          <div id="galleryDotContainer">
+            <span id="galleryDot1" class="acGalleryDot" onclick="showGalleryImage(1)"></span>
+            <span id="galleryDot2" class="acGalleryDot" onclick="showGalleryImage(2)"></span>
+            <span id="galleryDot3" class="acGalleryDot" onclick="showGalleryImage(3)"></span>
+            <span id="galleryDot4" class="acGalleryDot" onclick="showGalleryImage(4)"></span>
+            <span id="galleryDot5" class="acGalleryDot" onclick="showGalleryImage(5)"></span>
+          </div>
         </div>
       </div>
-      <div style="overflow-y:auto;">
+      <div id="acFlexItemInfo">
         <div>
-          <span style="margin-right:30px;">
-            <span>Year:</span>
-            <span id="projectDate">2019</span>
-          </span>
-          <span id="projectLevels">
-            <span>Stories:</span>
-            <span id="projectStories">0</span>
-            <span>above grade,</span>
-            <span id="projectParking">0</span> 
-            <span>below</span>
-          </span>
-        </div>
-        <div>
-          <span id="projectDesc">Description</span>
-        </div>
-        <div>
-          <span style="font-weight:bold">Responsibilities:</span>
-          <span id="projectInvol">Involvement</span>
+          <div>
+            <span style="margin-right:30px;">
+              <span>Year:</span>
+              <span id="projectDate">2019</span>
+            </span>
+            <span id="projectLevels">
+              <span>Stories:</span>
+              <span id="projectStories">0</span>
+              <span>above grade,</span>
+              <span id="projectParking">0</span> 
+              <span>below</span>
+            </span>
+          </div>
+          <div>
+            <span id="projectDesc">Description</span>
+          </div>
+          <div>
+            <span style="font-weight:bold">Responsibilities:</span>
+            <span id="projectInvol">Involvement</span>
+          </div>
         </div>
       </div>
     </div>
-    <div style="position:absolute; right:14px; top:14px; cursor:pointer; padding: 1px; width:15px; height:15px;" onclick="setPopUpVisibility(false)"><img id="closePopUp" src="uploads/icons/close.svg"></div>
   </div>
 </div>
 <script>
