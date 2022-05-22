@@ -1804,11 +1804,7 @@ window.onkeydown = function (e) {
 </script>
 <style>
   /* see https://www.w3schools.com/howto/howto_js_slideshow.asp */
-  .acProjectImg {
-    pointer-events: none;
-    user-select: none;
-    display: none;
-  }
+  
 
   .acArrowContainer {
     visibility: inherit;
@@ -1880,24 +1876,50 @@ window.onkeydown = function (e) {
     background-color: #fff;
   }
 
+
+
+
+  #infoPopup {
+    background-color: white;
+    position: absolute;
+    top: 20px;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    z-index: 99;
+    visibility: hidden;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  }
+
+  #PopupFlexContainer{
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 15px;
+    bottom: 20px;
+  }
+
+
   #acFlexContainer {
     display: flex;
     flex-direction: row;
-    height: 90%;
+    flex-grow:1;
+    min-height:0
   }
 
   #acFlexItemGallery {
     flex-grow: 0;
     flex-shrink: 1;
     flex-basis: 500px;
-    align-self: center;
-    margin-right: 10px;
+    min-width: 0;
+    min-height: 0;
+    margin: 0 20px;
   }
 
   #acFlexItemInfo {
     flex-grow: 1;
     flex-shrink: 2;
-    margin-left: 10px;
+    margin: 0 20px;
     overflow-y: auto;
   }
 
@@ -1907,6 +1929,14 @@ window.onkeydown = function (e) {
   }
   #acFlexItemGallery {
     flex-basis: 200px;
+  }
+
+  .acProjectImg {
+    margin-left: auto;
+    margin-right: auto;
+    pointer-events: none;
+    user-select: none;
+    display: none;
   }
 }
 </style>
@@ -1940,21 +1970,16 @@ window.onkeydown = function (e) {
 </div>
 <div style="position:relative;">
   <div id="map" style="height:500px"></div>
-  <div id="infoPopup" style="background-color:white; position:absolute; z-index:99; padding:15px; top:20px; bottom:20px; left:20px; right:20px; visibility:hidden; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
-    <div style="position:absolute; right:14px; top:14px; cursor:pointer; padding: 1px; width:15px; height:15px;" onclick="setPopUpVisibility(false)">
-      <img id="closePopUp" src="uploads/icons/close.svg">
-    </div>
-    <h2 id="projectName" style="margin:0; text-align:center;">Project Name</h2>
-    <!-- <div style="position:absolute; top:20px; bottom:20px; left:20px; right:20px; display:grid; grid-template-columns:auto auto; grid-template-rows:1.8em minmax(0,1fr); grid-row-gap:10px; grid-column-gap:20px; justify-content:start; align-content:start;">
-    </div> -->
-    <div id="acFlexContainer">
-      <div id="acFlexItemGallery" style="background-color:lightgrey">
-        <div style="position:relative; background-color:#999999;">
-          <img id="projectImg1" src="" class="acProjectImg" style="display:block;">
-          <img id="projectImg2" src="" class="acProjectImg">
-          <img id="projectImg3" src="" class="acProjectImg">
-          <img id="projectImg4" src="" class="acProjectImg">
-          <img id="projectImg5" src="" class="acProjectImg">
+  <div id="infoPopup">
+    <div id="PopupFlexContainer">
+      <h2 id="projectName" style="margin:0 20px; text-align:center;">Project Name</h2>
+      <div id="acFlexContainer">
+        <div id="acFlexItemGallery">
+          <img id="projectImg1" src="" class="acProjectImg" style="width:100%; height:100%; object-fit:contain;">
+          <img id="projectImg2" src="" class="acProjectImg" style="width:100%; height:100%; object-fit:contain;">
+          <img id="projectImg3" src="" class="acProjectImg" style="width:100%; height:100%; object-fit:contain;">
+          <img id="projectImg4" src="" class="acProjectImg" style="width:100%; height:100%; object-fit:contain;">
+          <img id="projectImg5" src="" class="acProjectImg" style="width:100%; height:100%; object-fit:contain;">
           <div class="acArrowContainer" id="projectImgPrev">
             <span class="acArrow" onclick="showPrevGalleryImage()">&#10094;</span>
           </div>
@@ -1969,9 +1994,7 @@ window.onkeydown = function (e) {
             <span id="galleryDot5" class="acGalleryDot" onclick="showGalleryImage(5)"></span>
           </div>
         </div>
-      </div>
-      <div id="acFlexItemInfo">
-        <div>
+        <div id="acFlexItemInfo">
           <div>
             <span style="margin-right:30px;">
               <span>Year:</span>
@@ -1995,7 +2018,12 @@ window.onkeydown = function (e) {
         </div>
       </div>
     </div>
+    <div style="position: absolute; right: 14px; top: 14px; padding: 1px; width: 15px; height:15px; cursor: pointer;" onclick="setPopUpVisibility(false)">
+      <img id="closePopUp" src="uploads/icons/close.svg">
+    </div>
   </div>
+</div>
+<div>
 </div>
 <script>
 // Add the slider events
