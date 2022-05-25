@@ -1399,6 +1399,7 @@ const iconOff = "https://mt.google.com/vt/icon/name=icons/onion/SHARED-mymaps-co
 const iconHosp = "https://mt.google.com/vt/icon/name=icons/onion/SHARED-mymaps-container-bg_4x.png,icons/onion/SHARED-mymaps-container_4x.png,icons/onion/1602-hotel-bed_4x.png&highlight=ff000000,FF5252,ff000000&scale=1.0";
 const iconInst = "https://mt.google.com/vt/icon/name=icons/onion/SHARED-mymaps-container-bg_4x.png,icons/onion/SHARED-mymaps-container_4x.png,icons/onion/1546-city-buildings_4x.png&highlight=ff000000,9C27B0,ff000000&scale=1.0";
 const iconSpec = "https://mt.google.com/vt/icon/name=icons/onion/SHARED-mymaps-container-bg_4x.png,icons/onion/SHARED-mymaps-container_4x.png,icons/onion/1502-shape_star_4x.png&highlight=ff000000,e65100,ff000000&scale=1.0";
+const iconRetro = "https://mt.google.com/vt/icon/name=icons/onion/SHARED-mymaps-container-bg_4x.png,icons/onion/SHARED-mymaps-container_4x.png,icons/onion/1850-recycling_4x.png&highlight=ff000000,757575,ff000000&scale=1.0";
 
 // Setup global variables
 var map;
@@ -1522,6 +1523,9 @@ function setMarkers() {
       case "Specialty":
         iconType = iconSpec;
         break;
+      case "Retrofit":
+        iconType = iconRetro;
+        break;
       default:
         iconType = "";
     }
@@ -1634,6 +1638,12 @@ function setPopUpVisibility(showPopUp, showImg) {
 
 
 function showGalleryImage(number) {
+  if (number == undefined) {
+    document.getElementById("acFlexItemGallery").style.display = "none";
+  } else {
+    document.getElementById("acFlexItemGallery").style.display = "";
+  }
+
   // Show the image
   document.getElementById("projectImg1").style.display = ((number == 1) ? "block" : "none");
   document.getElementById("projectImg2").style.display = ((number == 2) ? "block" : "none");
