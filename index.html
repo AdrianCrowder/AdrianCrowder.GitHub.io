@@ -1996,11 +1996,11 @@ window.onkeydown = function (e) {
           <img id="projectImg3" src="" class="acProjectImg" style="width:100%; height:100%; object-fit:contain;">
           <img id="projectImg4" src="" class="acProjectImg" style="width:100%; height:100%; object-fit:contain;">
           <img id="projectImg5" src="" class="acProjectImg" style="width:100%; height:100%; object-fit:contain;">
-          <div class="acArrowContainer" id="projectImgPrev">
-            <span class="acArrow" onclick="showPrevGalleryImage()">&#10094;</span>
+          <div class="acArrowContainer" id="projectImgPrev" onclick="showPrevGalleryImage()">
+            <span class="acArrow">&#10094;</span>
           </div>
-          <div class="acArrowContainer" id="projectImgNext">
-            <span class="acArrow" onclick="showNextGalleryImage()">&#10095;</span>
+          <div class="acArrowContainer" id="projectImgNext" onclick="showNextGalleryImage()">
+            <span class="acArrow">&#10095;</span>
           </div>
           <div id="galleryDotContainer">
             <span id="galleryDot1" class="acGalleryDot" onclick="showGalleryImage(1)"></span>
@@ -2011,20 +2011,20 @@ window.onkeydown = function (e) {
           </div>
         </div>
         <div id="acFlexItemInfo">
-          <div>
+          <div style="margin-bottom: 10px;">
             <span style="margin-right:30px;">
-              <span>Year:</span>
+              <span style="font-weight:bold">Year:</span>
               <span id="projectDate">2019</span>
             </span>
             <span id="projectLevels">
-              <span>Stories:</span>
+              <span style="font-weight:bold">Stories:</span>
               <span id="projectStories">0</span>
               <span>above grade,</span>
               <span id="projectParking">0</span> 
               <span>below</span>
             </span>
           </div>
-          <div>
+          <div style="margin-bottom: 10px;">
             <span id="projectDesc">Description</span>
           </div>
           <div>
